@@ -5,9 +5,10 @@ The controlling will be done remotely over TCP.
 
 ### TODO
 - [ ] TCP Connection
-    - [ ] Accepting client connection
+    - [x] Accepting client connection
     - [ ] Accepting more then one client
     - [ ] Define command handling
+        - [x] Quit the application
         - [ ] Shut down the device
         - [ ] Restart the device (should automatically start our application)
     - [ ] Encrypt the data transfer
