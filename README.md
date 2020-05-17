@@ -13,10 +13,15 @@ The controlling will be done remotely over TCP.
         - [ ] Restart the device (should automatically start our application)
     - [ ] Encrypt the data transfer
 - [ ] Display the infos using SDL - Direct buffer rendering
+    - [ ] SDL2
+        - [x] "Hello World" SDL
+        - [ ] Font rendering
+        - [ ] Screen layout
     - [ ] ToDo Lists
     - [ ] Appointments
     - [ ] Time / Date
     - [ ] Weather from openweather.org
         - [ ] Current weather
         - [ ] Forecast
+- [ ] Setup cross compiling
 
