@@ -1,0 +1,45 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'home-info-display'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=home-info-display",
+                    "--package=home-info-display"
+                ],
+                "filter": {
+                    "name": "home-info-display",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'home-info-display'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=home-info-display",
+                    "--package=home-info-display"
+                ],
+                "filter": {
+                    "name": "home-info-display",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
