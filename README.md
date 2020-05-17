@@ -1,6 +1,6 @@
 # home_info_display
 
-Program to display various information an a wall mounted raspberry pi 3 with display.
+Program to display various information on a wall mounted raspberry pi 3 with display.
 The controlling will be done remotely over TCP.
 
 ### TODO
