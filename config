@@ -1,0 +1,10 @@
+[target.armv7-unknown-linux-gnueabihf]
+#linker = "arm-linux-gnueabihf-gcc"
+#linker = "gcc-sysroot"
+linker = "/home/rschwalk/x-tools/armv8-rpi3-linux-gnueabihf/bin/armv8-rpi3-linux-gnueabihf-gcc"
+#rustflags = ["-L", "/home/rschwalk/x-tools/armv8-rpi3-linux-gnueabihf/armv8-rpi3-linux-gnueabihf/sysroot/opt/vc/lib"]
+#rustflags = ["-L", "/home/rschwalk/x-tools/armv8-rpi3-linux-gnueabihf/armv8-rpi3-linux-gnueabihf/sysroot/opt/vc/lib",
+#             "-Wl,-rpath,/home/rschwalk/x-tools/armv8-rpi3-linux-gnueabihf/armv8-rpi3-linux-gnueabihf/sysroot/opt/vc/lib", 
+#             "-Wl,-rpath,/home/rschwalk/x-tools/armv8-rpi3-linux-gnueabihf/armv8-rpi3-linux-gnueabihf/sysroot/lib",
+#             "-Wl,-rpath,/home/rschwalk/x-tools/armv8-rpi3-linux-gnueabihf/armv8-rpi3-linux-gnueabihf/sysroot/usr/lib"
+#             ]
