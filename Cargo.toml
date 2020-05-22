@@ -9,15 +9,5 @@ edition = "2018"
 #[target.x86_64-unknown-linux-gnu.dependencies.sdl2]
 [dependencies.sdl2]
 version = "0.34.0"
-#default-features = false
-#features = ["static-link"]
-#features = ["bundled", "use-pkgconfig", "use-bindgen"]
-#features = ["use-bindgen", "ttf"]
-
-#[target.armv7-unknown-linux-gnueabihf.dependencies.sdl2]
-#version = "0.34.0"
-#default-features = false
-#features = ["bundled", "ttf"]
-
-[target.armv7-unknown-linux-gnueabihf.sdl2-sys]
-rustc-link-search = ["/home/rschwalk/x-tools/armv8-rpi3-linux-gnueabihf/armv8-rpi3-linux-gnueabihf/sysroot/opt/vc/lib"]
+default-features = false
+features = ["ttf"]

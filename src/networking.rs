@@ -42,13 +42,13 @@ fn handle_connection(mut stream: TcpStream, queue: Arc<Mutex<VecDeque<Commands>>
             let cmd = String::from_utf8_lossy(&buffer[..len]);
             let mut commands = queue.lock().unwrap();
             println!("Data received: {}", cmd);
-            if cmd == "terminate\r\n" {
+            return if cmd == "terminate\r\n" {
                 commands.push_back(Commands::Quit);
-                return false;
+                false
             } else {
                 commands.push_back(Commands::Invalid);
-                return true;
-            }
+                true
+            };
             // match cmd {
             //     "DONE\r\n" => queue.push_back(Commands::Quit),
             //     _ => queue.push_back(Commands::Invalid),
