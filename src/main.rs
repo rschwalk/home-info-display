@@ -37,23 +37,7 @@ fn main() {
         networking::listen(thread_mutex);
     });
 
-    // let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string()).unwrap();
-
     let mut display = graphics::MainDisplay::new(SCREEN_WIDTH, SCREEN_HEIGHT);
-    // let mut canvas = display.canvas;
-
-    // let texture_creator = canvas.texture_creator();
-    // let mut font = ttf_context.load_font("./NotoSans-Regular.ttf", 16).unwrap();
-
-    // let surface = font
-    //     .render("Hello rust")
-    //     .blended(Color::RGBA(255, 0, 0, 255))
-    //     .map_err(|e| e.to_string())
-    //     .unwrap();
-    // let texture = texture_creator
-    //     .create_texture_from_surface(&surface)
-    //     .map_err(|e| e.to_string())
-    //     .unwrap();
 
     // canvas.set_draw_color(Color::RGB(195, 217, 255));
     // canvas.clear();
@@ -66,7 +50,7 @@ fn main() {
     // canvas.copy(&texture, None, Some(target)).unwrap();
     // canvas.present();
 
-    let mut event_pump = display.context.event_pump().unwrap();
+    let mut event_pump = display.sdl_context.event_pump().unwrap();
 
     let mut running = true;
     while running {
@@ -92,6 +76,7 @@ fn main() {
         // canvas.clear();
         // display.canvas.clear();
         display.draw_frame();
+        display.draw_labels();
         display.canvas.present();
         // canvas.copy(&texture, None, Some(target)).unwrap();
         // canvas.present();
@@ -108,7 +93,7 @@ fn main() {
             }
         }
 
-        thread::sleep(Duration::from_secs(1 / 2));
+        thread::sleep(Duration::from_secs(1 / 24));
     }
 
     handle.join().unwrap();
