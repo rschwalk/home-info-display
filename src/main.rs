@@ -13,6 +13,7 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
+mod graphics;
 mod networking;
 
 static SCREEN_WIDTH: u32 = 800;
@@ -25,8 +26,8 @@ macro_rules! rect(
     )
 );
 
-// If we are running on our development machine, then we need to send the terminate message to
-// the Tcp socket to end listening.
+// If we are running on our development machine, then we need to send the
+// terminate message to the Tcp socket to end listening.
 #[cfg(not(target_arch = "arm"))]
 fn send_terminate() {
     match TcpStream::connect("127.0.0.1:62000") {
@@ -47,23 +48,11 @@ fn main() {
         networking::listen(thread_mutex);
     });
 
-    let sdl_context = sdl2::init().unwrap();
-    let video_subsystem = sdl_context.video().unwrap();
     let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string()).unwrap();
 
-    let window = video_subsystem
-        .window("Pi Home Display", SCREEN_WIDTH, SCREEN_HEIGHT)
-        .position_centered()
-        .opengl()
-        .build()
-        .map_err(|e| e.to_string())
-        .unwrap();
+    let mut display = graphics::MainDisplay::new(SCREEN_WIDTH, SCREEN_HEIGHT);
+    let mut canvas = display.canvas;
 
-    let mut canvas = window
-        .into_canvas()
-        .build()
-        .map_err(|e| e.to_string())
-        .unwrap();
     let texture_creator = canvas.texture_creator();
     let mut font = ttf_context.load_font("./NotoSans-Regular.ttf", 16).unwrap();
 
@@ -85,13 +74,10 @@ fn main() {
 
     let target = Rect::new(64, 64, width as u32, height as u32);
 
-    // let padding = 64;
-    // let target = get_centered_rect(width, height, SCREEN_WIDTH - padding, SCREEN_HEIGHT - padding);
-
     canvas.copy(&texture, None, Some(target)).unwrap();
     canvas.present();
 
-    let mut event_pump = sdl_context.event_pump().unwrap();
+    let mut event_pump = display.context.event_pump().unwrap();
 
     let mut running = true;
     while running {
@@ -117,7 +103,6 @@ fn main() {
         canvas.clear();
         canvas.copy(&texture, None, Some(target)).unwrap();
         canvas.present();
-        // std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 30));
 
         {
             let mut commands = queue_mutex.lock().unwrap();
