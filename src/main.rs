@@ -77,6 +77,7 @@ fn main() {
         // display.canvas.clear();
         display.draw_frame();
         display.draw_labels();
+        display.draw_current_temp(25);
         display.canvas.present();
         // canvas.copy(&texture, None, Some(target)).unwrap();
         // canvas.present();
