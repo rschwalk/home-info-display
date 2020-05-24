@@ -11,6 +11,7 @@ use std::time::Duration;
 
 mod graphics;
 mod networking;
+mod data;
 
 static SCREEN_WIDTH: u32 = 800;
 static SCREEN_HEIGHT: u32 = 480;
@@ -36,6 +37,9 @@ fn main() {
     let handle = thread::spawn(move || {
         networking::listen(thread_mutex);
     });
+
+    let data::MainData { cal_data } = data::MainData::load_data();
+    println!("{:#?}", cal_data);
 
     let mut display = graphics::MainDisplay::new(SCREEN_WIDTH, SCREEN_HEIGHT);
     display.init();
