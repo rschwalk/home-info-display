@@ -84,18 +84,18 @@ impl MainDisplay {
 
     pub fn draw_labels(&mut self) {
         // label CALENDAR
-        self.draw_label("CALENDER", 16, FontStyle::BOLD, 400 - 9, 97, Align::CenterX);
+        self.draw_label("CALENDER", 16, FontStyle::BOLD, 200 - 9, 97, Align::CenterX);
 
         // label To Do
-        self.draw_label("TODO", 16, FontStyle::BOLD, 800 + 400, 97, Align::CenterX);
+        self.draw_label("TODO", 16, FontStyle::BOLD, 600 - 9, 97, Align::CenterX);
 
         // label °C
-        self.draw_label("°C", 16, FontStyle::BOLD, 340 + 92, 50, Align::Nothing);
+        self.draw_label("°C", 16, FontStyle::BOLD, 340 + 92, 30, Align::Nothing);
     }
 
     pub fn draw_current_temp(&mut self, value: i16) {
         let label_pos_x = (340 + 4) as i32;
-        let label_pos_y = (100) as i32;
+        let label_pos_y = 50;
         self.draw_label(
             value.to_string().as_str(),
             65,
@@ -108,7 +108,7 @@ impl MainDisplay {
 
     fn draw_invalid_temp(&mut self) {
         let label_pos_x = (340 + 4) as i32;
-        let label_pos_y = (100) as i32;
+        let label_pos_y = 50;
         self.draw_label(
             "--",
             65,
@@ -146,8 +146,8 @@ impl MainDisplay {
         let TextureQuery { width, height, .. } = texture.query();
 
         let pos = match align {
-            Align::CenterX => (pos_x / 2 - width as i32 / 2, pos_y),
-            Align::CenterY => (pos_x, pos_y / 2 - height as i32 / 2),
+            Align::CenterX => (pos_x - width as i32 / 2, pos_y),
+            Align::CenterY => (pos_x, pos_y - height as i32 / 2),
             Align::Nothing => (pos_x, pos_y),
         };
         let (center_pos_x, center_pos_y) = pos;
