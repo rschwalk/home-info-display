@@ -38,6 +38,8 @@ fn main() {
     });
 
     let mut display = graphics::MainDisplay::new(SCREEN_WIDTH, SCREEN_HEIGHT);
+    display.init();
+    display.canvas.present();
 
     let mut event_pump = display.sdl_context.event_pump().unwrap();
 
@@ -63,11 +65,8 @@ fn main() {
             }
         }
 
-        display.draw_frame();
-        display.draw_labels();
-        display.draw_current_temp(25);
+        display.init();
         display.canvas.present();
-
         {
             let mut commands = queue_mutex.lock().unwrap();
             if !commands.is_empty() {

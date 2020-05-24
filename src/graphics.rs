@@ -54,12 +54,18 @@ impl MainDisplay {
         }
     }
 
+    pub fn init(&mut self) {
+        self.draw_frame();
+        self.draw_labels();
+        self.draw_invalid_temp();
+    }
+
     fn clear_with_bg(&mut self) {
         self.canvas.set_draw_color(self.bg_color);
         self.canvas.clear();
     }
 
-    pub fn draw_frame(&mut self) {
+    fn draw_frame(&mut self) {
         let rects = [
             // vertical
             Rect::new(391, 100, 18, self.screen_height),
@@ -92,6 +98,19 @@ impl MainDisplay {
         let label_pos_y = (100) as i32;
         self.draw_label(
             value.to_string().as_str(),
+            65,
+            FontStyle::BOLD,
+            label_pos_x,
+            label_pos_y,
+            Align::CenterY,
+        );
+    }
+
+    fn draw_invalid_temp(&mut self) {
+        let label_pos_x = (340 + 4) as i32;
+        let label_pos_y = (100) as i32;
+        self.draw_label(
+            "--",
             65,
             FontStyle::BOLD,
             label_pos_x,
