@@ -2,16 +2,14 @@ extern crate sdl2;
 
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
-use sdl2::render::{Texture, TextureCreator, TextureQuery, TextureValueError, WindowCanvas};
-use sdl2::surface::Surface;
-use sdl2::ttf::{Font, FontStyle, Sdl2TtfContext};
+use sdl2::render::{TextureCreator, TextureQuery, WindowCanvas};
+use sdl2::ttf::{FontStyle, Sdl2TtfContext};
 use sdl2::video::WindowContext;
 use sdl2::Sdl;
-use std::borrow::Borrow;
 
 pub struct MainDisplay {
-    // screen_width: u32,
-    // screen_height: u32,
+    screen_width: u32,
+    screen_height: u32,
     pub sdl_context: Sdl,
     pub canvas: WindowCanvas,
     texture_creator: TextureCreator<WindowContext>,
@@ -22,8 +20,8 @@ pub struct MainDisplay {
 }
 
 enum Align {
-    Center_X,
-    Center_Y,
+    CenterX,
+    CenterY,
     Nothing,
 }
 
@@ -44,8 +42,8 @@ impl MainDisplay {
         let ttf_context = sdl2::ttf::init().expect("TTF init failed!");
 
         Self {
-            // screen_width,
-            // screen_height,
+            screen_width,
+            screen_height,
             sdl_context,
             canvas,
             texture_creator,
@@ -64,9 +62,9 @@ impl MainDisplay {
     pub fn draw_frame(&mut self) {
         let rects = [
             // vertical
-            Rect::new(391, 100, 18, 600),
+            Rect::new(391, 100, 18, self.screen_height),
             // horizontal
-            Rect::new(0, 100, 800, 18),
+            Rect::new(0, 100, self.screen_width, 18),
             // main temp
             Rect::new(340, 0, 120, 100),
         ];
@@ -79,79 +77,14 @@ impl MainDisplay {
     }
 
     pub fn draw_labels(&mut self) {
-        // let mut font = self
-        //     .ttf_context
-        //     .load_font("assets/NotoSans-Regular.ttf", 16)
-        //     .expect("Font loading failed!");
-        // font.set_style(FontStyle::BOLD);
-
         // label CALENDAR
-        self.draw_label(
-            "CALENDER",
-            16,
-            FontStyle::BOLD,
-            400 - 9,
-            97,
-            Align::Center_X,
-        );
-        // let surface_cal = font
-        //     .render("CALENDAR")
-        //     .blended(self.fg_color)
-        //     .expect("Font rendering failed!");
-        // let texture_cal = self
-        //     .texture_creator
-        //     .create_texture_from_surface(&surface_cal)
-        //     .expect("Creating the font texture failed!");
-        //
-        // let TextureQuery { width, height, .. } = texture_cal.query();
-        //
-        // let label_cal_pos_x = (((400 - 9) / 2) - (width / 2)) as i32;
-        // let label_pos_y: i32 = 97;
-        //
-        // let target_cal = Rect::new(label_cal_pos_x, label_pos_y, width, height);
-        // self.canvas
-        //     .copy(&texture_cal, None, target_cal)
-        //     .expect("Rendering the calendar label failed!");
+        self.draw_label("CALENDER", 16, FontStyle::BOLD, 400 - 9, 97, Align::CenterX);
 
         // label To Do
-        self.draw_label("TODO", 16, FontStyle::BOLD, 800 + 400, 97, Align::Center_X);
-        // let surface_todo = font
-        //     .render("TODO")
-        //     .blended(self.fg_color)
-        //     .expect("Font rendering failed!");
-        // let texture_todo = self
-        //     .texture_creator
-        //     .create_texture_from_surface(&surface_todo)
-        //     .expect("Creating the font texture failed!");
-        // let TextureQuery { width, height, .. } = texture_todo.query();
-        //
-        // let label_todo_pos_x = ((((400 - 9) / 2) + 400) - (width / 2)) as i32;
-        //
-        // let target_todo = Rect::new(label_todo_pos_x, label_pos_y, width, height);
-        // self.canvas
-        //     .copy(&texture_todo, None, target_todo)
-        //     .expect("Rendering the calendar label failed!");
+        self.draw_label("TODO", 16, FontStyle::BOLD, 800 + 400, 97, Align::CenterX);
 
         // label °C
         self.draw_label("°C", 16, FontStyle::BOLD, 340 + 92, 50, Align::Nothing);
-        // let surface_celsius = font
-        //     .render("°C")
-        //     .blended(self.fg_color)
-        //     .expect("Font rendering failed!");
-        // let texture_celsius = self
-        //     .texture_creator
-        //     .create_texture_from_surface(&surface_celsius)
-        //     .expect("Creating the font texture failed!");
-        //
-        // let TextureQuery { width, height, .. } = texture_celsius.query();
-        //
-        // let label_celsius_pos_x = (340 + 120 - width - 4) as i32;
-        // let label_celsius_pos_y = (100 / 2 - height - 4) as i32;
-        //
-        // let target_celsius = Rect::new(label_celsius_pos_x, label_celsius_pos_y, width, height);
-        // self.canvas
-        //     .copy(&texture_celsius, None, target_celsius)
-        //     .expect("Rendering the calendar label failed!");
     }
 
     pub fn draw_current_temp(&mut self, value: i16) {
@@ -163,7 +96,7 @@ impl MainDisplay {
             FontStyle::BOLD,
             label_pos_x,
             label_pos_y,
-            Align::Center_Y,
+            Align::CenterY,
         );
     }
 
@@ -194,8 +127,8 @@ impl MainDisplay {
         let TextureQuery { width, height, .. } = texture.query();
 
         let pos = match align {
-            Align::Center_X => (pos_x / 2 - width as i32 / 2, pos_y),
-            Align::Center_Y => (pos_x, pos_y / 2 - height as i32 / 2),
+            Align::CenterX => (pos_x / 2 - width as i32 / 2, pos_y),
+            Align::CenterY => (pos_x, pos_y / 2 - height as i32 / 2),
             Align::Nothing => (pos_x, pos_y),
         };
         let (center_pos_x, center_pos_y) = pos;

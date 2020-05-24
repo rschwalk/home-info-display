@@ -13,7 +13,7 @@ mod graphics;
 mod networking;
 
 static SCREEN_WIDTH: u32 = 800;
-static SCREEN_HEIGHT: u32 = 600;
+static SCREEN_HEIGHT: u32 = 480;
 
 // If we are running on our development machine, then we need to send the
 // terminate message to the Tcp socket to end listening.
@@ -39,17 +39,6 @@ fn main() {
 
     let mut display = graphics::MainDisplay::new(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    // canvas.set_draw_color(Color::RGB(195, 217, 255));
-    // canvas.clear();
-    // canvas.present();
-
-    // let TextureQuery { width, height, .. } = texture.query();
-
-    // let target = Rect::new(64, 64, width as u32, height as u32);
-
-    // canvas.copy(&texture, None, Some(target)).unwrap();
-    // canvas.present();
-
     let mut event_pump = display.sdl_context.event_pump().unwrap();
 
     let mut running = true;
@@ -66,6 +55,7 @@ fn main() {
                     keycode: Some(Keycode::Escape),
                     ..
                 } => {
+                    #[cfg(not(target_arch = "arm"))]
                     send_terminate();
                     running = false
                 }
@@ -73,14 +63,10 @@ fn main() {
             }
         }
 
-        // canvas.clear();
-        // display.canvas.clear();
         display.draw_frame();
         display.draw_labels();
         display.draw_current_temp(25);
         display.canvas.present();
-        // canvas.copy(&texture, None, Some(target)).unwrap();
-        // canvas.present();
 
         {
             let mut commands = queue_mutex.lock().unwrap();
