@@ -38,9 +38,6 @@ fn main() {
         networking::listen(thread_mutex);
     });
 
-    let data::MainData { cal_data } = data::MainData::load_data();
-    println!("{:#?}", cal_data);
-
     let mut display = graphics::MainDisplay::new(SCREEN_WIDTH, SCREEN_HEIGHT);
     display.init();
     display.canvas.present();
