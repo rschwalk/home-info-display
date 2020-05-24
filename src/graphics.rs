@@ -1,14 +1,16 @@
 extern crate sdl2;
 
+use super::data::MainData;
+
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
 use sdl2::render::{TextureCreator, TextureQuery, WindowCanvas};
 use sdl2::ttf::{FontStyle, Sdl2TtfContext};
 use sdl2::video::WindowContext;
+use sdl2::image::{LoadTexture, InitFlag};
 use sdl2::Sdl;
+use std::thread;
 
-use super::data::MainData;
-use sdl2::render::UpdateTextureYUVError::RectNotInsideTexture;
 
 pub struct MainDisplay {
     screen_width: u32,
@@ -31,8 +33,9 @@ enum Align {
 
 impl MainDisplay {
     pub fn new(screen_width: u32, screen_height: u32) -> Self {
-        let sdl_context = sdl2::init().expect("SDL_Init was not sucsessfull!");
+        let sdl_context = sdl2::init().expect("SDL_Init was not successful!");
         let video_subsystem = sdl_context.video().unwrap();
+        let _image_context = sdl2::image::init(InitFlag::PNG).unwrap();
 
         let window = video_subsystem
             .window("Pi Home Display", screen_width, screen_height)
@@ -46,6 +49,8 @@ impl MainDisplay {
         let ttf_context = sdl2::ttf::init().expect("TTF init failed!");
 
         let main_data = MainData::load_data();
+        // let timer = sdl_context.timer().expect("Init timer failed");
+        // timer.add_timer(1000, move || println!("Hello:") );
 
         Self {
             screen_width,
@@ -57,15 +62,22 @@ impl MainDisplay {
             accent_color: Color::RGB(235, 110, 75),
             bg_color: Color::RGB(72, 72, 74),
             fg_color: Color::RGB(253, 253, 253),
-            main_data: main_data,
+            main_data,
         }
     }
+
+    // fn update_weather_data(&mut self) {
+    //     let main_data = MainData::load_data();
+    //     self.main_data = main_data;
+    // }
 
     pub fn init(&mut self) {
         self.draw_frame();
         self.draw_labels();
-        self.draw_invalid_temp();
-
+        // self.draw_invalid_temp();
+        let current_temp = self.main_data.current_weather.temp as i16;
+        self.draw_current_temp(current_temp);
+        self.draw_current_weather();
         self.display_calendar();
     }
 
@@ -128,6 +140,19 @@ impl MainDisplay {
         );
     }
 
+    fn draw_weather_icon(&mut self,) {
+        let icon_path = format!("assets/img/{}", self.main_data.current_weather.icon);
+        let icon_texture = self.texture_creator.load_texture(icon_path).expect("Failed to load the weather icon!");
+        let target = Rect::new(4, 4, 92, 92);
+        self.canvas.copy(&icon_texture, None, target).expect("Failed to render the current weather icon!");
+    }
+
+    fn draw_current_weather(&mut self) {
+        self.draw_weather_icon();
+        let desc = self.main_data.current_weather.description.clone();
+        self.draw_label(desc.as_str(), 16, FontStyle::NORMAL, 104, 66, Align::Nothing);
+    }
+
     fn draw_label(
         &mut self,
         txt: &str,
@@ -170,9 +195,18 @@ impl MainDisplay {
         let mut pos_y = 118;
         let calendar = self.main_data.cal_data.clone();
         for event in calendar {
-            self.draw_label(event.as_str(), 16, FontStyle::NORMAL, 4, pos_y, Align::Nothing);
+            self.draw_label(
+                event.as_str(),
+                16,
+                FontStyle::NORMAL,
+                4,
+                pos_y,
+                Align::Nothing,
+            );
             self.canvas.set_draw_color(self.accent_color);
-            self.canvas.fill_rect(Rect::new(0, pos_y + 22, 400 - 9, 2));
+            self.canvas
+                .fill_rect(Rect::new(0, pos_y + 22, 400 - 9, 2))
+                .expect("Drawing the line failed!");
             pos_y += 24;
         }
     }
