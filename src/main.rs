@@ -45,7 +45,8 @@ fn main() {
     let mut event_pump = display.sdl_context.event_pump().unwrap();
 
     let mut running = true;
-    let mut now = Instant::now();
+    let mut weather_timer = Instant::now();
+    let mut time_timer = Instant::now();
     while running {
         for event in event_pump.poll_iter() {
             match event {
@@ -81,9 +82,14 @@ fn main() {
             }
         }
 
-        if now.elapsed().as_secs() > 3600 {
+        if time_timer.elapsed().as_secs() > 10 {
+            display.update_time();
+            time_timer = Instant::now();
+        }
+
+        if weather_timer.elapsed().as_secs() > 3600 {
             display.update_weather_data();
-            now = Instant::now();
+            weather_timer = Instant::now();
         }
 
         thread::sleep(Duration::from_secs(1 / 24));

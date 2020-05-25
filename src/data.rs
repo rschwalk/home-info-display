@@ -88,7 +88,7 @@ impl MainData {
                 _ => {
                     let dt = forecast["list"][n]["dt"].as_i64().unwrap();
                     let time = Local.timestamp(dt, 0);
-                    let date = time.format("(%:wA)").to_string();
+                    let date = time.format("%A").to_string();
                     let temp_max = forecast["list"][n]["temp"]["max"].as_f64().unwrap().round();
                     let temp_min = forecast["list"][n]["temp"]["min"].as_f64().unwrap().round();
                     let mut forecast_icon = String::from(forecast["list"][n]["weather"][0]["icon"].to_string().replace("\"", ""));
@@ -102,7 +102,6 @@ impl MainData {
         let current_time = Local::now();
         let curr_time = current_time.format("%H:%M").to_string();
         let curr_date = current_time.format("%A, %d. %B %Y").to_string();
-        println!("{}", curr_date);
 
         let current_weather = CurrentWeather {
             temp,
@@ -120,5 +119,11 @@ impl MainData {
             curr_date,
             api_key,
         }
+    }
+
+    pub fn update_time(&mut self) {
+        let current_time = Local::now();
+        let curr_time = current_time.format("%H:%M").to_string();
+        self.curr_time = curr_time;
     }
 }

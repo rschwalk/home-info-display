@@ -66,7 +66,11 @@ impl MainDisplay {
     pub fn update_weather_data(&mut self) {
         let main_data = MainData::load_data();
         self.main_data = main_data;
-        println!("Updeted the weather data.");
+        println!("Updated the weather data.");
+    }
+
+    pub fn update_time(&mut self) {
+        self.main_data.update_time();
     }
 
     pub fn init(&mut self) {
@@ -164,7 +168,7 @@ impl MainDisplay {
         let desc = self.main_data.current_weather.description.clone();
         let min = self.main_data.current_weather.min;
         let max = self.main_data.current_weather.max;
-        let label = format!("{} - {} °C/{} °C", desc, min, max);
+        let label = format!("{}  {} °C/{} °C", desc, min, max);
         self.draw_label(
             &label,
             16,
@@ -195,7 +199,7 @@ impl MainDisplay {
         for data in temp_labels {
             let (temps, date) = data;
             self.draw_label(&temps, 14, FontStyle::NORMAL, pos_x + 30, 64, Align::CenterX);
-            self.draw_label(&date, 14, FontStyle::NORMAL, pos_x + 30, 80, Align::CenterX);
+            self.draw_label(&date, 14, FontStyle::ITALIC, pos_x + 30, 80, Align::CenterX);
             pos_x += gap;
         }
     }
