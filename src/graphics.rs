@@ -9,6 +9,7 @@ use sdl2::render::{TextureCreator, TextureQuery, WindowCanvas};
 use sdl2::ttf::{FontStyle, Sdl2TtfContext};
 use sdl2::video::WindowContext;
 use sdl2::Sdl;
+use std::process::id;
 
 pub struct MainDisplay {
     screen_width: u32,
@@ -47,8 +48,6 @@ impl MainDisplay {
         let ttf_context = sdl2::ttf::init().expect("TTF init failed!");
 
         let main_data = MainData::load_data();
-        // let timer = sdl_context.timer().expect("Init timer failed");
-        // timer.add_timer(1000, move || println!("Hello:") );
 
         Self {
             screen_width,
@@ -74,9 +73,11 @@ impl MainDisplay {
         self.draw_frame();
         self.draw_labels();
         // self.draw_invalid_temp();
+        self.draw_current_date_time();
         let current_temp = self.main_data.current_weather.temp as i16;
         self.draw_current_temp(current_temp);
         self.draw_current_weather();
+        self.draw_forecast_icons();
         self.display_calendar();
     }
 
@@ -111,6 +112,13 @@ impl MainDisplay {
 
         // label °C
         self.draw_label("°C", 16, FontStyle::BOLD, 340 + 92, 30, Align::Nothing);
+    }
+
+    fn draw_current_date_time(&mut self) {
+        let time = self.main_data.curr_time.clone();
+        self.draw_label(&time, 26, FontStyle::BOLD, 220, 0, Align::CenterX);
+        let date = self.main_data.curr_date.clone();
+        self.draw_label(&date, 16, FontStyle::BOLD, 220, 30, Align::CenterX);
     }
 
     pub fn draw_current_temp(&mut self, value: i16) {
@@ -154,14 +162,42 @@ impl MainDisplay {
     fn draw_current_weather(&mut self) {
         self.draw_weather_icon();
         let desc = self.main_data.current_weather.description.clone();
+        let min = self.main_data.current_weather.min;
+        let max = self.main_data.current_weather.max;
+        let label = format!("{} - {} °C/{} °C", desc, min, max);
         self.draw_label(
-            desc.as_str(),
+            &label,
             16,
             FontStyle::NORMAL,
             104,
             66,
             Align::Nothing,
         );
+    }
+
+    fn draw_forecast_icons(&mut self) {
+        let mut temp_labels = Vec::new();
+        let mut pos_x = 488;
+        let gap = 104;
+        for forecast in &mut self.main_data.forecast {
+            let icon = format!("assets/img/{}", forecast.forecast_icon);
+            let txt = self.texture_creator.load_texture(icon).expect("Failed to load the forecast icon!");
+            let target = Rect::new(pos_x, 4, 60, 60);
+            pos_x += gap;
+            self.canvas.copy(&txt, None, target).expect("Failed to load the forecast texture!");
+            let min = forecast.temp_min;
+            let max = forecast.temp_max;
+            let forecast_str = format!("{} °C/{} °C", min, max);
+            let date = forecast.date.clone();
+            temp_labels.push((forecast_str, date));
+        }
+        pos_x = 488;
+        for data in temp_labels {
+            let (temps, date) = data;
+            self.draw_label(&temps, 14, FontStyle::NORMAL, pos_x + 30, 64, Align::CenterX);
+            self.draw_label(&date, 14, FontStyle::NORMAL, pos_x + 30, 80, Align::CenterX);
+            pos_x += gap;
+        }
     }
 
     fn draw_label(
