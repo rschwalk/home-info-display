@@ -7,11 +7,11 @@ use std::io::Write;
 use std::net::TcpStream;
 use std::sync::{Arc, Mutex};
 use std::thread;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
+mod data;
 mod graphics;
 mod networking;
-mod data;
 
 static SCREEN_WIDTH: u32 = 800;
 static SCREEN_HEIGHT: u32 = 480;
@@ -45,6 +45,7 @@ fn main() {
     let mut event_pump = display.sdl_context.event_pump().unwrap();
 
     let mut running = true;
+    let mut now = Instant::now();
     while running {
         for event in event_pump.poll_iter() {
             match event {
@@ -78,6 +79,11 @@ fn main() {
                     networking::Commands::Invalid => {}
                 }
             }
+        }
+
+        if now.elapsed().as_secs() > 3600 {
+            display.update_weather_data();
+            now = Instant::now();
         }
 
         thread::sleep(Duration::from_secs(1 / 24));

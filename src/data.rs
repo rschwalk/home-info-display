@@ -35,22 +35,34 @@ impl MainData {
         let api_key =
             std::fs::read_to_string("assets/api.txt").expect("Reading the api file failed!");
 
-        let rewuest_url = format!(
+        let request_url = format!(
             "http://api.openweathermap.org/data/2.5/weather?q=Dachau,de&units=metric&APPID={}",
             api_key
         );
 
-        let weather = reqwest::blocking::get(&rewuest_url)
+        let weather = reqwest::blocking::get(&request_url)
             .expect("Failed to load current weather data!")
             .json::<Value>()
             .expect("Failed to convert current weather data to jason!");
 
         let temp = weather["main"]["temp"].as_f64().unwrap().round();
-        let desc = String::from(weather["weather"][0]["description"].to_string().replace("\"", ""));
+        let desc = String::from(
+            weather["weather"][0]["description"]
+                .to_string()
+                .replace("\"", ""),
+        );
         let mut icon = String::from(weather["weather"][0]["icon"].to_string().replace("\"", ""));
         icon.push_str(".png");
-        let current_weather = CurrentWeather  { temp, description: desc, icon: icon.to_string(),};
+        let current_weather = CurrentWeather {
+            temp,
+            description: desc,
+            icon: icon.to_string(),
+        };
 
-        MainData { cal_data, current_weather, api_key }
+        MainData {
+            cal_data,
+            current_weather,
+            api_key,
+        }
     }
 }

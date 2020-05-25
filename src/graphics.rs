@@ -2,15 +2,13 @@ extern crate sdl2;
 
 use super::data::MainData;
 
+use sdl2::image::{InitFlag, LoadTexture};
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
 use sdl2::render::{TextureCreator, TextureQuery, WindowCanvas};
 use sdl2::ttf::{FontStyle, Sdl2TtfContext};
 use sdl2::video::WindowContext;
-use sdl2::image::{LoadTexture, InitFlag};
 use sdl2::Sdl;
-use std::thread;
-
 
 pub struct MainDisplay {
     screen_width: u32,
@@ -66,10 +64,11 @@ impl MainDisplay {
         }
     }
 
-    // fn update_weather_data(&mut self) {
-    //     let main_data = MainData::load_data();
-    //     self.main_data = main_data;
-    // }
+    pub fn update_weather_data(&mut self) {
+        let main_data = MainData::load_data();
+        self.main_data = main_data;
+        println!("Updeted the weather data.");
+    }
 
     pub fn init(&mut self) {
         self.draw_frame();
@@ -140,17 +139,29 @@ impl MainDisplay {
         );
     }
 
-    fn draw_weather_icon(&mut self,) {
+    fn draw_weather_icon(&mut self) {
         let icon_path = format!("assets/img/{}", self.main_data.current_weather.icon);
-        let icon_texture = self.texture_creator.load_texture(icon_path).expect("Failed to load the weather icon!");
+        let icon_texture = self
+            .texture_creator
+            .load_texture(icon_path)
+            .expect("Failed to load the weather icon!");
         let target = Rect::new(4, 4, 92, 92);
-        self.canvas.copy(&icon_texture, None, target).expect("Failed to render the current weather icon!");
+        self.canvas
+            .copy(&icon_texture, None, target)
+            .expect("Failed to render the current weather icon!");
     }
 
     fn draw_current_weather(&mut self) {
         self.draw_weather_icon();
         let desc = self.main_data.current_weather.description.clone();
-        self.draw_label(desc.as_str(), 16, FontStyle::NORMAL, 104, 66, Align::Nothing);
+        self.draw_label(
+            desc.as_str(),
+            16,
+            FontStyle::NORMAL,
+            104,
+            66,
+            Align::Nothing,
+        );
     }
 
     fn draw_label(
